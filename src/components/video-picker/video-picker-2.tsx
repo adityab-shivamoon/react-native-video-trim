@@ -1,9 +1,10 @@
 import { Ionicons } from '@expo/vector-icons'
 import { ResizeMode, Video } from 'expo-av'
 import * as ImagePicker from 'expo-image-picker'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Pressable, View } from 'react-native'
-import { VESDK } from 'react-native-videoeditorsdk'
+import { Button } from 'react-native'
+import { Configuration, ForceTrimMode, Tool, VESDK } from 'react-native-videoeditorsdk'
 
 interface VideoPickerProps {
   handleResult: (result: any) => void
@@ -36,23 +37,32 @@ function VideoPickerComponent2({ handleResult }: VideoPickerProps) {
     }
   }
 
-  useEffect(() => {
-    if (selectedVideo != '') {
-      showVideoEditorExample()
-    }
-  }, [result])
+  // useEffect(() => {
+  //   if (selectedVideo != '') {
+  //     showVideoEditorExample()
+  //   }
+  // }, [result])
 
   const showVideoEditorExample = async (): Promise<void> => {
     try {
       // Add a video from the assets directory.
       const video = selectedVideo
 
+      let config: Configuration = {
+        tools: [Tool.TRIM],
+        trim: {
+          minimumDuration: 10,
+          maximumDuration: 15,
+          forceMode: ForceTrimMode.ALWAYS
+        }
+      }
       // Open the video editor and handle the export as well as any occuring errors.
-      const result = await VESDK.openEditor(video)
+      const result = await VESDK.openEditor(video, config)
 
       if (result != null) {
         // The user exported a new video successfully and the newly generated video is located at `result.video`.
         console.log(result?.video)
+        setSelectedVideo(result?.video)
       } else {
         // The user tapped on the cancel button within the editor.
         return
@@ -61,6 +71,10 @@ function VideoPickerComponent2({ handleResult }: VideoPickerProps) {
       // There was an error generating the video.
       console.log(error)
     }
+  }
+
+  function editVideoHandler() {
+    showVideoEditorExample()
   }
 
   return (
@@ -97,6 +111,7 @@ function VideoPickerComponent2({ handleResult }: VideoPickerProps) {
           {!selectedVideo && <Ionicons name="image-outline" color={'white'} size={18} />}
         </View>
       </Pressable>
+      <Button title="Edit Video" onPress={editVideoHandler} />
     </View>
   )
 }

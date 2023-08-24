@@ -13,6 +13,7 @@ Please use the `npx expo eject` command to switch to the "bare" react-native app
 
 Happy hacking! 🤓
  - npx pod-install (imp)
+ cd android ./gradlew clean
 ## Code Features
 
 - [TypeScript](https://www.typescriptlang.org/).
