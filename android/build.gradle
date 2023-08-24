@@ -1,0 +1,44 @@
+
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url "https://artifactory.img.ly/artifactory/imgly" }
+        google()
+    }
+    dependencies {
+        classpath('com.facebook.react:react-native-gradle-plugin')
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.32"
+        classpath 'ly.img.android.sdk:plugin:10.7.3'
+    }
+    ext {
+        buildToolsVersion = "31.0.0"
+        minSdkVersion = 21
+        compileSdkVersion = 31
+        targetSdkVersion = Integer.parseInt(findProperty('android.targetSdkVersion') ?: '33')
+        // kotlinVersion = findProperty('android.kotlinVersion') ?: '1.5.32'
+        frescoVersion = findProperty('expo.frescoVersion') ?: '2.5.0'
+
+        // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
+        ndkVersion = "23.1.7779620"
+    }
+}
+
+
+allprojects {
+    repositories {
+        maven {
+            // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+            url(new File(['node', '--print', "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim(), '../android'))
+        }
+        maven {
+            // Android JSC is installed from npm
+            url(new File(['node', '--print', "require.resolve('jsc-android/package.json')"].execute(null, rootDir).text.trim(), '../dist'))
+        }
+        maven { url 'https://artifactory.img.ly/artifactory/imgly' }
+
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+    }
+}
+

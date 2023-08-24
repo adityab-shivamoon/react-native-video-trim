@@ -1,10 +1,13 @@
 import { ReactElement } from 'react'
-import { StyleSheet, Text } from 'react-native'
+import { Dimensions, StyleSheet, Text } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+
+import VideoPickerComponent2 from './components/video-picker/video-picker-2'
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    maxWidth: Dimensions.get('window').width,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center'
@@ -18,13 +21,17 @@ const styles = StyleSheet.create({
   }
 })
 
+function handleResult(result: any) {
+  // console.log("result:", result)
+}
+
 export default function App(): ReactElement {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        <Text style={styles.text}>OneLife.City!</Text>
+        <VideoPickerComponent2 handleResult={handleResult} />
         <Text style={styles.emoji}>😻</Text>
-        <Text style={styles.text}>Open src/App.tsx to start working on your app!</Text>
-        <Text>Happy hacking! 🙌🏻</Text>
       </SafeAreaView>
     </SafeAreaProvider>
   )

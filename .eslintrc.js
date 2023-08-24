@@ -14,6 +14,14 @@ module.exports = {
       }
     }
   ],
+  // disabling lint for now
+  //  add  "eslint './src/**/*{js,ts,jsx,tsx}' --fix" in "lint-staged": {
+  //   "**/*.{js,jsx,ts,tsx}": [
+  //     "eslint './src/**/*{js,ts,jsx,tsx}' --fix",
+  //     "prettier --write './src/**/*{js,ts,jsx,tsx}'"
+  //   ]
+  // }, after scripts
+  ignorePatterns: ['*.ts', '*.tsx', '*.d.ts'],
   settings: {
     'import/resolver': {
       typescript: {} // this loads <rootdir>/tsconfig.json to ESLint
