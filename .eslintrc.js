@@ -8,7 +8,8 @@ module.exports = {
   ],
   overrides: [
     {
-      files: ['*.ts', '*.tsx', '*.d.ts'],
+      // files: ['*.ts', '*.tsx', '*.d.ts'],
+      files: ['*.md'],
       parserOptions: {
         project: './tsconfig.json'
       }
