@@ -1,8 +1,15 @@
-// import * as FileSystem from 'expo-file-system';
 import { Ionicons } from '@expo/vector-icons'
 import { Audio, AVPlaybackStatus } from 'expo-av'
+import * as FileSystem from 'expo-file-system'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+
+import {
+  AndroidAudioEncoder,
+  AndroidOutputFormat,
+  IOSAudioQuality,
+  IOSOutputFormat
+} from 'expo-av/build/Audio'
 
 // const audioUrl = "https://samplelib.com/lib/preview/mp3/sample-15s.mp3";
 
@@ -24,6 +31,60 @@ export default function AudioPicker() {
   const recordingTimer = 30000 //audio not greater than 30s
   const recordingTimerFunction = useRef<NodeJS.Timeout | null>(null)
   const [waveformAmplitudeArray, setWaveformAmplitudeArray] = useState<number[]>([])
+
+  // const HIGH_QUALITY_AUDIO_CONFIG = {
+  //   isMeteringEnabled: true,
+  //   android: {
+  //     extension: '.m4a',
+  //     outputFormat: AndroidOutputFormat.MPEG_4,
+  //     audioEncoder: AndroidAudioEncoder.AAC,
+  //     sampleRate: 44100,
+  //     numberOfChannels: 1,
+  //     bitRate: 128000,
+  //   },
+  //   ios: {
+  //     extension: '.m4a',
+  //     outputFormat: IOSOutputFormat.MPEG4AAC,
+  //     audioQuality: IOSAudioQuality.MAX,
+  //     sampleRate: 44100,
+  //     numberOfChannels: 1,
+  //     bitRate: 128000,
+  //     linearPCMBitDepth: 16,
+  //     linearPCMIsBigEndian: false,
+  //     linearPCMIsFloat: false,
+  //   },
+  //   web: {
+  //     mimeType: 'audio/webm',
+  //     bitsPerSecond: 128000,
+  //   },
+  // };
+
+  const LOW_QUALITY_AUDIO_CONFIG = {
+    isMeteringEnabled: true,
+    android: {
+      extension: '.m4a',
+      outputFormat: AndroidOutputFormat.MPEG_4,
+      audioEncoder: AndroidAudioEncoder.AAC,
+      sampleRate: 44100,
+      numberOfChannels: 1,
+      bitRate: 64000
+    },
+    ios: {
+      extension: '.m4a',
+      audioQuality: IOSAudioQuality.MIN,
+      outputFormat: IOSOutputFormat.MPEG4AAC,
+      sampleRate: 44100,
+      numberOfChannels: 1,
+      bitRate: 64000,
+      linearPCMBitDepth: 8,
+      linearPCMIsBigEndian: false,
+      linearPCMIsFloat: false
+    },
+    web: {
+      mimeType: 'audio/webm',
+      bitsPerSecond: 128000
+    }
+  }
 
   useEffect(() => {
     // Simply get recording permission upon first render
@@ -91,7 +152,7 @@ export default function AudioPicker() {
       setAudioSound(null)
       const newRecording = new Audio.Recording()
       console.log('Starting Recording')
-      await newRecording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY)
+      await newRecording.prepareToRecordAsync(LOW_QUALITY_AUDIO_CONFIG)
       await newRecording.startAsync()
       setRecordingStatus('recording')
       setRecording(newRecording)
@@ -187,11 +248,24 @@ export default function AudioPicker() {
       // Audio playback has finished, so reset the position to the beginning
       setIsAudioBeingPlayed(false)
       await audioSound.setPositionAsync(0)
+      // for android to not loop audio
+      await audioSound.pauseAsync()
+      setIsAudioBeingPlayed(false)
     }
   }
 
   async function playRecording() {
-    console.log('arr len:', waveformAmplitudeArray.length)
+    console.log('waveform arr len:', waveformAmplitudeArray.length)
+    if (recordingAudioUri) {
+      console.log('uri:', recordingAudioUri)
+      const fileInfo = await FileSystem.getInfoAsync(recordingAudioUri)
+      if (fileInfo.exists) {
+        const fileSizeBytes = fileInfo.size
+        const fileSizeKB = fileSizeBytes / 1024
+        console.log('file size:', fileSizeKB)
+      }
+    }
+
     if (recordingAudioUri && recordingStatus === 'stopped' && audioSound) {
       if (!isAudioBeingPlayed) {
         // await playbackObject.loadAsync({ uri: FileSystem.documentDirectory + 'recordings/' + `${fileName}` });
