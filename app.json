@@ -28,6 +28,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-image-picker", "react-native-imglysdk"]
+    "plugins": ["expo-image-picker", "react-native-imglysdk",[
+      "expo-av",
+      {
+        "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+      }
+    ]]
   }
 }

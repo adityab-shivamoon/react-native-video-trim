@@ -2,7 +2,9 @@ import { ReactElement } from 'react'
 import { Dimensions, StyleSheet, Text } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
-import VideoPickerComponent2 from './components/video-picker/video-picker-2'
+import AudioPicker from './components/audio-picker/audio-picker'
+
+// import VideoPickerComponent2 from './components/video-picker/video-picker-2'
 
 const styles = StyleSheet.create({
   container: {
@@ -30,7 +32,8 @@ export default function App(): ReactElement {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         <Text style={styles.text}>OneLife.City!</Text>
-        <VideoPickerComponent2 handleResult={handleResult} />
+        <AudioPicker />
+        {/* <VideoPickerComponent2 handleResult={handleResult} /> */}
         <Text style={styles.emoji}>😻</Text>
       </SafeAreaView>
     </SafeAreaProvider>
