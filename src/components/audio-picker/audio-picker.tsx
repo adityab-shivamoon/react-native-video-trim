@@ -7,6 +7,11 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 // const audioUrl = "https://samplelib.com/lib/preview/mp3/sample-15s.mp3";
 
 export default function AudioPicker() {
+  const maxDbFS = 0 // as seen in expo docs (Decibel range from -160 to 0)
+  const inputMin = 1e-8
+  const inputMax = 1
+  const outputMin = 3
+  const outputMax = 100
   const [recording, setRecording] = useState<Audio.Recording | null>(null)
   const [recordingAudioUri, setRecordingAudioUri] = useState<string | null>(null)
   const [recordingStatus, setRecordingStatus] = useState<any>('idle')
@@ -18,6 +23,7 @@ export default function AudioPicker() {
   const [timerFlag, setTimerFlag] = useState<boolean>(false)
   const recordingTimer = 30000 //audio not greater than 30s
   const recordingTimerFunction = useRef<NodeJS.Timeout | null>(null)
+  const [waveformAmplitudeArray, setWaveformAmplitudeArray] = useState<number[]>([])
 
   useEffect(() => {
     // Simply get recording permission upon first render
@@ -42,14 +48,27 @@ export default function AudioPicker() {
     }
   }, [])
 
+  // function range 1e-8 to 1 (-160 to 0 Db values)
+  const decibelToAmplitude = (decibelValue: number) => {
+    return Math.pow(10, decibelValue / 20) * Math.pow(10, maxDbFS / 20)
+  }
+
+  // convert amp values in a particular range
+  const scaleValueToRange = (value: number) => {
+    const normalizedValue = (value - inputMin) / (inputMax - inputMin)
+    const scaledValue = normalizedValue * (outputMax - outputMin) + outputMin
+    return scaledValue
+  }
+
   async function recordingStatusHandler(status: Audio.RecordingStatus) {
     if (status.canRecord) {
-      // console.log(
-      //   "dur:",
-      //   status.isRecording,
-      //   status.durationMillis,
-      //   status.metering
-      // );
+      if (status && status.metering) {
+        const newValue = scaleValueToRange(decibelToAmplitude(status.metering))
+        console.log('status:', status.metering, newValue)
+        setWaveformAmplitudeArray((prevValues) => {
+          return [...prevValues, newValue]
+        })
+      }
       // console.log("dur1 :", status.durationMillis);
       setRecordingDuration(Math.round(status.durationMillis / 1000))
     } else if (status.isDoneRecording) {
@@ -59,6 +78,8 @@ export default function AudioPicker() {
   }
 
   const startRecording = async () => {
+    // clear waveform array
+    setWaveformAmplitudeArray([])
     try {
       // needed for IoS
       if (audioPermission) {
@@ -70,7 +91,7 @@ export default function AudioPicker() {
       setAudioSound(null)
       const newRecording = new Audio.Recording()
       console.log('Starting Recording')
-      await newRecording.prepareToRecordAsync()
+      await newRecording.prepareToRecordAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY)
       await newRecording.startAsync()
       setRecordingStatus('recording')
       setRecording(newRecording)
@@ -170,6 +191,7 @@ export default function AudioPicker() {
   }
 
   async function playRecording() {
+    console.log('arr len:', waveformAmplitudeArray.length)
     if (recordingAudioUri && recordingStatus === 'stopped' && audioSound) {
       if (!isAudioBeingPlayed) {
         // await playbackObject.loadAsync({ uri: FileSystem.documentDirectory + 'recordings/' + `${fileName}` });
@@ -212,19 +234,33 @@ export default function AudioPicker() {
       ) : (
         <Text style={styles.recordingStatusText}>Tap on the Mic to start Recording</Text>
       )}
-      <TouchableOpacity style={styles.button2} onPress={playRecording}>
-        <Ionicons
-          name={isAudioBeingPlayed ? 'pause-outline' : 'play-outline'}
-          color={'black'}
-          size={24}
-        />
-        <Text style={styles.recordingStatusText2}>
-          {isAudioBeingPlayed ? 'Pause' : 'Play'} Audio
-        </Text>
+      <View style={styles.playSoundView}>
+        <TouchableOpacity style={styles.button2} onPress={playRecording}>
+          <Ionicons
+            name={isAudioBeingPlayed ? 'pause-outline' : 'play-outline'}
+            color={'black'}
+            size={24}
+          />
+        </TouchableOpacity>
+        {/* <Text style={styles.recordingStatusText2}>
+          {isAudioBeingPlayed ? "Pause" : "Play"}
+        </Text> */}
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginHorizontal: 10
+          }}
+        >
+          {waveformAmplitudeArray.map((barHeight, index) => (
+            <View key={index} style={[styles.soundBars, { height: barHeight }]} />
+          ))}
+        </View>
         {isAudioBeingPlayed && (
-          <Text style={styles.recordingStatusText}>{`${playingAudioDuration}s`}</Text>
+          <Text style={styles.recordingStatusText2}>{`${playingAudioDuration}s`}</Text>
         )}
-      </TouchableOpacity>
+      </View>
     </View>
   )
 }
@@ -233,7 +269,8 @@ const styles = StyleSheet.create({
   container: {
     // flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    padding: 30
   },
   button: {
     alignItems: 'center',
@@ -244,9 +281,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'red'
   },
   button2: {
-    flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 10
+    marginHorizontal: 10
   },
   recordingStatusText: {
     marginVertical: 16,
@@ -256,5 +292,21 @@ const styles = StyleSheet.create({
   recordingStatusText2: {
     textAlign: 'center',
     marginHorizontal: 10
+  },
+  playSoundView: {
+    // minWidth: "100%",
+    // maxWidth: "100%",
+    height: 30,
+    backgroundColor: '#d3d3d3',
+    borderRadius: 30,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 10
+  },
+  soundBars: {
+    width: 3,
+    margin: 1,
+    backgroundColor: 'black'
   }
 })
