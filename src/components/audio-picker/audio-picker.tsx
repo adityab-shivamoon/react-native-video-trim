@@ -1,8 +1,10 @@
 import { Ionicons } from '@expo/vector-icons'
 import { Audio, AVPlaybackStatus } from 'expo-av'
 import * as FileSystem from 'expo-file-system'
+import { LinearGradient } from 'expo-linear-gradient'
 import React, { useEffect, useRef, useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 
 import {
   AndroidAudioEncoder,
@@ -31,6 +33,9 @@ export default function AudioPicker() {
   const recordingTimer = 30000 //audio not greater than 30s
   const recordingTimerFunction = useRef<NodeJS.Timeout | null>(null)
   const [waveformAmplitudeArray, setWaveformAmplitudeArray] = useState<number[]>([])
+  const circleScaledValue1 = useSharedValue(1)
+  const circleScaledValue2 = useSharedValue(1)
+  const circleScaledValue3 = useSharedValue(1)
 
   // const HIGH_QUALITY_AUDIO_CONFIG = {
   //   isMeteringEnabled: true,
@@ -86,6 +91,27 @@ export default function AudioPicker() {
     }
   }
 
+  const animatedStyle1 = useAnimatedStyle(() => {
+    const scale = withSpring(circleScaledValue1.value)
+    return {
+      transform: [{ scale }]
+    }
+  })
+
+  const animatedStyle2 = useAnimatedStyle(() => {
+    const scale = withSpring(circleScaledValue2.value)
+    return {
+      transform: [{ scale }]
+    }
+  })
+
+  const animatedStyle3 = useAnimatedStyle(() => {
+    const scale = withSpring(circleScaledValue2.value)
+    return {
+      transform: [{ scale }]
+    }
+  })
+
   useEffect(() => {
     // Simply get recording permission upon first render
     async function getPermission() {
@@ -125,7 +151,10 @@ export default function AudioPicker() {
     if (status.canRecord) {
       if (status && status.metering) {
         const newValue = scaleValueToRange(decibelToAmplitude(status.metering))
-        console.log('status:', status.metering, newValue)
+        // console.log("status:", status.metering, newValue);
+        circleScaledValue1.value = 1.1 + newValue / 100
+        circleScaledValue2.value = 1.05 + newValue / 100
+        circleScaledValue3.value = 1 + newValue / 100
         setWaveformAmplitudeArray((prevValues) => {
           return [...prevValues, newValue]
         })
@@ -141,6 +170,7 @@ export default function AudioPicker() {
   const startRecording = async () => {
     // clear waveform array
     setWaveformAmplitudeArray([])
+    setPlayingAudioDuration(0)
     try {
       // needed for IoS
       if (audioPermission) {
@@ -197,7 +227,9 @@ export default function AudioPicker() {
   const stopRecording = async () => {
     // clear timeout
     setTimerFlag(false)
-
+    circleScaledValue1.value = 1
+    circleScaledValue2.value = 1
+    circleScaledValue3.value = 1
     try {
       if (recording && recordingStatus === 'recording') {
         console.log('Stopping Recording')
@@ -295,56 +327,114 @@ export default function AudioPicker() {
   }
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={handleRecordButtonPress}>
-        <Ionicons
-          name={recording ? 'mic-outline' : 'mic-circle-outline'}
-          color={'white'}
-          size={64}
-        />
-      </TouchableOpacity>
-      {recordingDuration > 0 ? (
-        <Text style={styles.recordingStatusText}>{`${recordingDuration}s`}</Text>
-      ) : (
-        <Text style={styles.recordingStatusText}>Tap on the Mic to start Recording</Text>
-      )}
-      <View style={styles.playSoundView}>
-        <TouchableOpacity style={styles.button2} onPress={playRecording}>
-          <Ionicons
-            name={isAudioBeingPlayed ? 'pause-outline' : 'play-outline'}
-            color={'black'}
-            size={24}
-          />
-        </TouchableOpacity>
-        {/* <Text style={styles.recordingStatusText2}>
+    <LinearGradient
+      // Background Linear Gradient
+      colors={['aqua', 'blue']}
+      style={styles.container}
+    >
+      <View style={styles.container}>
+        <Animated.View style={[styles.circle1, animatedStyle1]}>
+          <LinearGradient
+            // Background Linear Gradient
+            colors={['aqua', 'blue']}
+            style={{
+              width: '100%',
+              height: '100%',
+              borderRadius: 500,
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Animated.View style={[styles.circle2, animatedStyle2]}>
+              <LinearGradient
+                // Background Linear Gradient
+                colors={['aqua', 'blue']}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  borderRadius: 350,
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <Animated.View style={[styles.circle3, animatedStyle3]}>
+                  <LinearGradient
+                    // Background Linear Gradient
+                    colors={['aqua', 'blue']}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      borderRadius: 200,
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <TouchableOpacity style={styles.button} onPress={handleRecordButtonPress}>
+                      <Ionicons
+                        name={recording ? 'mic-outline' : 'mic-circle-outline'}
+                        color={'white'}
+                        size={64}
+                      />
+                    </TouchableOpacity>
+                  </LinearGradient>
+                </Animated.View>
+              </LinearGradient>
+            </Animated.View>
+          </LinearGradient>
+        </Animated.View>
+        <View style={styles.playSoundView}>
+          <View style={styles.start}>
+            <TouchableOpacity style={styles.button2} onPress={playRecording}>
+              <Ionicons
+                name={isAudioBeingPlayed ? 'pause-outline' : 'play-outline'}
+                color={'black'}
+                size={24}
+              />
+            </TouchableOpacity>
+            {/* <Text style={styles.recordingStatusText2}>
           {isAudioBeingPlayed ? "Pause" : "Play"}
         </Text> */}
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginHorizontal: 10
-          }}
-        >
-          {waveformAmplitudeArray.map((barHeight, index) => (
-            <View key={index} style={[styles.soundBars, { height: barHeight }]} />
-          ))}
+          </View>
+          <View style={styles.middle}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+                marginHorizontal: 10
+              }}
+            >
+              {waveformAmplitudeArray.map((barHeight, index) => (
+                <View key={index} style={[styles.soundBars, { height: barHeight }]} />
+              ))}
+            </View>
+          </View>
+          <View style={styles.end}>
+            {recordingDuration > 0 ? (
+              <Text style={styles.recordingStatusText}>{`${recordingDuration}s`}</Text>
+            ) : (
+              <></>
+              // <Text style={styles.recordingStatusText}>
+              //   Tap on the Mic
+              // </Text>
+            )}
+            {recordingDuration === 0 && (
+              <Text style={styles.recordingStatusText2}>{`${playingAudioDuration}s`}</Text>
+            )}
+          </View>
         </View>
-        {isAudioBeingPlayed && (
-          <Text style={styles.recordingStatusText2}>{`${playingAudioDuration}s`}</Text>
-        )}
       </View>
-    </View>
+    </LinearGradient>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
+    flex: 1,
+    width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 30
+    padding: 10
   },
   button: {
     alignItems: 'center',
@@ -356,10 +446,9 @@ const styles = StyleSheet.create({
   },
   button2: {
     alignItems: 'center',
-    marginHorizontal: 10
+    marginHorizontal: 13
   },
   recordingStatusText: {
-    marginVertical: 16,
     textAlign: 'center',
     marginHorizontal: 10
   },
@@ -367,10 +456,33 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginHorizontal: 10
   },
+  circle1: {
+    width: 500,
+    height: 500,
+    borderRadius: 500,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  circle2: {
+    width: 350,
+    height: 350,
+    borderRadius: 350,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  circle3: {
+    width: 200,
+    height: 200,
+    borderRadius: 200,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   playSoundView: {
-    // minWidth: "100%",
-    // maxWidth: "100%",
-    height: 30,
+    minWidth: '100%',
+    maxWidth: '100%',
+    position: 'absolute',
+    bottom: 30,
+    height: 50,
     backgroundColor: '#d3d3d3',
     borderRadius: 30,
     flexDirection: 'row',
@@ -382,5 +494,19 @@ const styles = StyleSheet.create({
     width: 3,
     margin: 1,
     backgroundColor: 'black'
+  },
+  start: {
+    flex: 1,
+    alignItems: 'flex-start' // Align at the start of the container
+  },
+  middle: {
+    flex: 1,
+    alignItems: 'center', // Center horizontally
+    maxWidth: 40,
+    overflow: 'scroll'
+  },
+  end: {
+    flex: 1,
+    alignItems: 'flex-end' // Align at the end of the container
   }
 })

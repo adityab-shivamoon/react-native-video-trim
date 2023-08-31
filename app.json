@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.onelife.city"
@@ -28,11 +26,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-image-picker", "react-native-imglysdk",[
-      "expo-av",
-      {
-        "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
-      }
-    ]]
+    "plugins": [
+      "expo-image-picker",
+      "react-native-imglysdk",
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone."
+        }
+      ]
+    ]
   }
 }

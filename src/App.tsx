@@ -1,3 +1,4 @@
+import { StatusBar } from 'expo-status-bar'
 import { ReactElement } from 'react'
 import { Dimensions, StyleSheet, Text } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
@@ -29,13 +30,16 @@ function handleResult(result: any) {
 
 export default function App(): ReactElement {
   return (
-    <SafeAreaProvider>
+    // <SafeAreaProvider>
+    <>
+      <StatusBar />
       <SafeAreaView style={styles.container}>
-        <Text style={styles.text}>OneLife.City!</Text>
+        {/* <Text style={styles.text}>OneLife.City!</Text> */}
         <AudioPicker />
         {/* <VideoPickerComponent2 handleResult={handleResult} /> */}
-        <Text style={styles.emoji}>😻</Text>
+        {/* <Text style={styles.emoji}>😻</Text> */}
       </SafeAreaView>
-    </SafeAreaProvider>
+    </>
+    // </SafeAreaProvider>
   )
 }

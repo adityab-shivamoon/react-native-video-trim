@@ -15,13 +15,15 @@ PODS:
   - EXImageLoader (4.3.0):
     - ExpoModulesCore
     - React-Core
-  - Expo (49.0.6):
+  - Expo (49.0.8):
     - ExpoModulesCore
   - ExpoImagePicker (14.3.2):
     - ExpoModulesCore
   - ExpoKeepAwake (12.3.0):
     - ExpoModulesCore
-  - ExpoModulesCore (1.5.9):
+  - ExpoLinearGradient (12.3.0):
+    - ExpoModulesCore
+  - ExpoModulesCore (1.5.10):
     - RCT-Folly (= 2021.07.22.00)
     - React-Core
     - React-NativeModulesApple
@@ -464,6 +466,35 @@ PODS:
     - React-jsi (= 0.72.3)
     - React-logger (= 0.72.3)
     - React-perflogger (= 0.72.3)
+  - RNReanimated (3.3.0):
+    - DoubleConversion
+    - FBLazyVector
+    - glog
+    - hermes-engine
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-hermes
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTAppDelegate
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNVideoEditorSDK (3.0.0):
     - React
     - React-RCTImage
@@ -485,6 +516,7 @@ DEPENDENCIES:
   - Expo (from `../node_modules/expo`)
   - ExpoImagePicker (from `../node_modules/expo-image-picker/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - ExpoLinearGradient (from `../node_modules/expo-linear-gradient/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - ExpoVideoThumbnails (from `../node_modules/expo-video-thumbnails/ios`)
   - EXSplashScreen (from `../node_modules/expo-splash-screen/ios`)
@@ -527,6 +559,7 @@ DEPENDENCIES:
   - React-runtimescheduler (from `../node_modules/react-native/ReactCommon/react/renderer/runtimescheduler`)
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNVideoEditorSDK (from `../node_modules/react-native-videoeditorsdk`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -561,6 +594,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-image-picker/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
+  ExpoLinearGradient:
+    :path: "../node_modules/expo-linear-gradient/ios"
   ExpoModulesCore:
     :path: "../node_modules/expo-modules-core"
   ExpoVideoThumbnails:
@@ -642,6 +677,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/react/utils"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNVideoEditorSDK:
     :path: "../node_modules/react-native-videoeditorsdk"
   Yoga:
@@ -656,10 +693,11 @@ SPEC CHECKSUMS:
   EXFileSystem: 941b273758aee14be2ecc671dacb4f10dd28c833
   EXFont: 738c44c390953ebcbab075a4848bfbef025fd9ee
   EXImageLoader: 34b214f9387e98f3c73989f15d8d5b399c9ab3f7
-  Expo: 5601f86edc81c7e7e1772b9af9ae58fa3b45ad53
+  Expo: 900dc423a0e2c7e822b2c683a89426e82695fb27
   ExpoImagePicker: c58fdf28be551681a8edc550bcec76c397a8dfcd
   ExpoKeepAwake: be4cbd52d9b177cde0fd66daa1913afa3161fc1d
-  ExpoModulesCore: e4e437139259c5a73530a8895af69774ff8ec12d
+  ExpoLinearGradient: 5966dd5d49872cc9c104fedc8bbc298b6049b2e8
+  ExpoModulesCore: e5a168deba84f74c0e558befa31dbaea06c00af0
   ExpoVideoThumbnails: 3b5ec2a802a67b6e1a22d38b4526ef4619dd3938
   EXSplashScreen: c0e7f2d4a640f3b875808ed0b88575538daf6d82
   FBLazyVector: 4cce221dd782d3ff7c4172167bba09d58af67ccb
@@ -702,6 +740,7 @@ SPEC CHECKSUMS:
   React-runtimescheduler: 837c1bebd2f84572db17698cd702ceaf585b0d9a
   React-utils: bcb57da67eec2711f8b353f6e3d33bd8e4b2efa3
   ReactCommon: 3ccb8fb14e6b3277e38c73b0ff5e4a1b8db017a9
+  RNReanimated: 9f7068e43b9358a46a688d94a5a3adb258139457
   RNVideoEditorSDK: 0f27b7bc4ce9de1fe51b8fb549e94681fd5f5af8
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
   VideoEditorSDK: a41e6de39efe134acba56fde2b7a4d5d0c142a88
