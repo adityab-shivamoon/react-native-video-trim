@@ -28,3 +28,10 @@ Happy hacking! 🤓
 - Write tests with [Jest](https://jestjs.io/) and [React Native Testing Library](https://testing-library.com/).
 
 
+## Building
+eas build -p android --profile emulator
+eas build --local
+
+## Run on a specific device
+- npx expo run:android --device Pixel_3a_API_34_extension_level_7_arm64-v8a ( mobile names but not emulators can be seen from adb devices -l for android)
+- do npx expo run:android  (then Shift +A to see list of available devices Shift + i for ios)
