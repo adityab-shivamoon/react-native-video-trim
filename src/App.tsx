@@ -1,7 +1,7 @@
 import { StatusBar } from 'expo-status-bar'
 import { ReactElement, useEffect, useState } from 'react'
 import { Button, Dimensions, StyleSheet, Text } from 'react-native'
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 import AudioPicker from './components/audio-picker/audio-picker'
 
