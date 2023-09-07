@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/adityab-shivamoon/react-native-video-trim/compare/v1.1.1...v2.0.0) (2023-09-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* demo breaking change
+
+### Bug fixes
+
+* demo breaking change ([4ce9e9f](https://github.com/adityab-shivamoon/react-native-video-trim/commit/4ce9e9f6a49a89605bdedd2a389d528df7387851))
+
 ### [1.1.1](https://github.com/adityab-shivamoon/react-native-video-trim/compare/v1.1.0...v1.1.1) (2023-09-07)
 
 
