@@ -3,12 +3,11 @@ import { ReactElement, useEffect, useState } from 'react'
 import { Button, Dimensions, StyleSheet, Text } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
+// import VideoPickerComponent2 from './components/video-picker/video-picker-2'
 import AudioPicker from './components/audio-picker/audio-picker'
 
 // Custom Modules
 import CustomModule1 from './CustomModules'
-
-// import VideoPickerComponent2 from './components/video-picker/video-picker-2'
 
 const styles = StyleSheet.create({
   container: {
