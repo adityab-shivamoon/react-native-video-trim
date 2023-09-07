@@ -3,9 +3,9 @@ import { ReactElement, useEffect, useState } from 'react'
 import { Button, Dimensions, StyleSheet, Text } from 'react-native'
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
 
-// import VideoPickerComponent2 from './components/video-picker/video-picker-2'
 import AudioPicker from './components/audio-picker/audio-picker'
 
+// import VideoPickerComponent2 from './components/video-picker/video-picker-2'
 // Custom Modules
 import CustomModule1 from './CustomModules'
 
